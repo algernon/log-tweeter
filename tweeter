@@ -1,0 +1,29 @@
+#! /usr/bin/python
+import twitter
+import json
+import os
+import sys
+
+def tweet(message):
+	tweet = ""
+	if len(message) > 125:
+		tweet = "%s... #syslog_ng" % message[:125]
+	else:
+		tweet = "%s #syslog_ng" % message
+
+	cfg = json.load(open("/etc/syslog-ng/tweeter.credentials.json", 'r'))
+	t = twitter.Api(
+		consumer_key = cfg['consumer_key'],
+		consumer_secret = cfg['consumer_secret'],
+		access_token_key = cfg['access_token_key'],
+		access_token_secret = cfg['access_token_secret']
+	)
+	
+	t.PostUpdates(tweet)
+
+while True:
+	message = sys.stdin.readline().strip()
+	if message:
+		tweet(message)
+	else:
+		sys.exit(0)
