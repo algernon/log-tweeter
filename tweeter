@@ -3,6 +3,7 @@ import twitter
 import json
 import os
 import sys
+import syslog
 
 def tweet(message):
 	tweet = ""
@@ -18,8 +19,11 @@ def tweet(message):
 		access_token_key = cfg['access_token_key'],
 		access_token_secret = cfg['access_token_secret']
 	)
-	
-	t.PostUpdates(tweet)
+
+        try:
+                t.PostUpdates(tweet)
+        except twitter.TwitterError, e:
+                syslog.syslog("Error posting to twitter: %s" % e.message)
 
 while True:
 	message = sys.stdin.readline().strip()
