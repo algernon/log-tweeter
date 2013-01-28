@@ -29,5 +29,3 @@ while True:
 	message = sys.stdin.readline().strip()
 	if message:
 		tweet(message)
-	else:
-		sys.exit(0)
